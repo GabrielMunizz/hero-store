@@ -3,14 +3,7 @@ import ProductModel, {
   ProductSequelizeModel,
 } from '../database/models/product.model';
 import { ServiceResponse } from '../types/ServiceResponse';
-
-const validateProduct = (product:ProductInputtableTypes): string | null => {
-  if (!product.name) return 'name is required';
-  if (!product.orderId) return 'orderId is required';
-  if (!product.price) return 'price is required';
-
-  return null;
-};
+import validateProduct from '../utils/validateProduct';
 
 const createProduct = async (
   product: ProductInputtableTypes,
@@ -30,6 +23,17 @@ const createProduct = async (
   return responseService;
 };
 
+const getProducts = async (): Promise<ServiceResponse<ProductSequelizeModel[]>> => {
+  const products = await ProductModel.findAll();
+  
+  const responseService: ServiceResponse<ProductSequelizeModel[]> = {
+    status: 'SUCCESSFUL',
+    data: products,
+  };
+  return responseService;
+};
+
 export default {
   createProduct,
+  getProducts,
 };

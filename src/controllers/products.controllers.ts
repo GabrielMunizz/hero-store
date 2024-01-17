@@ -16,6 +16,17 @@ const createProductController = async (req: Request, res: Response): Promise<Res
   }
 };
 
+const getProductsController = async (_req: Request, res: Response) => {
+  try {
+    const response = await services.getProducts();
+
+    return res.status(200).json(response.data);
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro interno do servidor' });
+  } 
+};
+
 export default {
   createProductController,
+  getProductsController,
 };

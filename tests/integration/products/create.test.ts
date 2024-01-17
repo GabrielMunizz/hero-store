@@ -5,7 +5,8 @@ import service from '../../../src/services/products.services'
 import productMock from '../../mocks/product.mock';
 import app from '../../../src/app'
 import { ServiceResponse } from '../../../src/types/ServiceResponse';
-import { ProductInputtableTypes, ProductSequelizeModel } from '../../../src/database/models/product.model';;
+import ProductModel, { ProductInputtableTypes, ProductSequelizeModel } from '../../../src/database/models/product.model';import { create } from 'domain';
+;
 
 
 
@@ -17,26 +18,23 @@ describe('POST /products', function () {
   // se o produto for criado corretamente, retorna uma resposta de sucesso.
   it('Testa se é possível criar um produto corretamente', async() => {
 
-    // const product: ProductInputtableTypes = {
-    //   id: 6,
-    //   name: 'Produto de Teste',
-    //   price: '10',
-    //   orderId: 1,
-    // };
+    const product = {
+      id: 6,
+      name: 'Produto de Teste',
+      price: '10 moedas',
+      orderId: 1,
+    };
 
-    // const serviceResponseMock: ServiceResponse<ProductSequelizeModel> = { status: 'SUCCESSFUL', data: product }
+    const mockBuild = ProductModel.build(product);
 
-    // sinon.stub(service, 'createProduct').resolves(serviceResponseMock);
+    sinon.stub(ProductModel, 'create').resolves(mockBuild);    
 
-    // const httpResponse = await chai.request(app).post('/products').send(productMock.validProductBody);
+    sinon.stub(service, 'createProduct').resolves({status: 'SUCCESSFUL', data: mockBuild})
 
-    // expect(httpResponse.status).to.equal(201);
-    // expect(httpResponse.body).to.equal({
-    //   id: 6,
-    //   name: 'Produto de Teste',
-    //   price: '10',
-    //   orderId: 1, 
-    // })
+    const httpResponse = await chai.request(app).post('/products').send(productMock.validProductBody);
+
+    expect(httpResponse.status).to.equal(201);
+    expect(httpResponse.body).to.be.deep.equal(product);
   })
 
   // se o produto não tiver name, retorna um erro.
@@ -67,5 +65,14 @@ describe('POST /products', function () {
 
     expect(httpResponse.status).to.equal(400);
     expect(httpResponse.body).to.be.deep.equal({message: "orderId is required"});
+  });
+
+  it('Testa se enviar um produto com "id" incluso, retorna o erro esperado', async() => {
+    const httpRequestBody = productMock.productBodyWithID;
+
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+
+    expect(httpResponse.status).to.equal(500);
+    expect(httpResponse.body).to.be.deep.equal({error: "Erro interno do servidor"});
   });
 });
