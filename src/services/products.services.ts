@@ -1,8 +1,8 @@
 import ProductModel, {
   ProductInputtableTypes,
   ProductSequelizeModel,
-} from '../models/product.model';
-import { ServiceResponse } from '../../types/ServiceResponse';
+} from '../database/models/product.model';
+import { ServiceResponse } from '../types/ServiceResponse';
 
 const validateProduct = (product:ProductInputtableTypes): string | null => {
   if (!product.name) return 'name is required';
@@ -19,7 +19,7 @@ const createProduct = async (
   const error = validateProduct(product);
 
   if (error) {
-    responseService = { status: 'INVALID DATA', data: { message: error } };
+    responseService = { status: 'INVALID_DATA', data: { message: error } };
     return responseService;
   }
 
