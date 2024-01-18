@@ -22,7 +22,6 @@ const getOrders = async (): Promise<ServiceResponse<FormattedOrders[]>> => {
 
     return mappedOrder;
   });
-  console.log(mappedOrders);
   
   const responseService: ServiceResponse<FormattedOrders[]> = {
     status: 'SUCCESSFUL',

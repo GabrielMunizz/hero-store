@@ -33,6 +33,7 @@ describe('GET /products', function () {
     sinon.stub(service, 'getProducts').resolves({status: 'SUCCESSFUL', data: mockBuild});
 
     const httpResponse = await chai.request(app).get('/products')
+    
 
     expect(httpResponse.status).to.equal(200);
     expect(httpResponse.body).to.be.deep.equal(products);    
