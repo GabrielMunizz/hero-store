@@ -1,5 +1,5 @@
 const noNameProductBody = {
-  price: '10',
+  price: '10 moedas',
   orderId: 1,
 }
 
@@ -10,7 +10,7 @@ const noPriceProductBody = {
 
 const noOrderIdProductBody = {
   name: 'Produto de Teste',
-  price: '10',
+  price: '10 moedas',
 }
 
 const productBodyWithID = {
@@ -22,7 +22,7 @@ const productBodyWithID = {
 
 const validProductBody = {   
   name: 'Produto de Teste',
-  price: '10',
+  price: '10 moedas',
   orderId: 1,
 }
 
