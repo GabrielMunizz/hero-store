@@ -3,3 +3,14 @@ export type Order = {
   userId: number;
   productId?: number;
 };
+
+export type FormattedOrders = 
+  {
+    id: number;
+    userId: number;
+    productIds: [
+      {
+        id: number
+      },
+    ] | number[]
+  };

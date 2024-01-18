@@ -35,6 +35,6 @@ describe('GET /products', function () {
     const httpResponse = await chai.request(app).get('/products')
 
     expect(httpResponse.status).to.equal(200);
-    expect(httpResponse.body).to.be.deep.equal(products);
+    expect(httpResponse.body).to.be.deep.equal(products);    
   })
 });
