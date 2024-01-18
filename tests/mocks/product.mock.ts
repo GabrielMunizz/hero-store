@@ -26,10 +26,26 @@ const validProductBody = {
   orderId: 1,
 }
 
+const mockProducts = [
+  {
+    id: 6,
+    name: 'Produto de Teste',
+    price: '10 moedas',
+    orderId: 1,
+  },
+  {
+    id: 7,
+    name: 'Produto de Teste 2',
+    price: '20 moedas',
+    orderId: 2,
+  },
+];
+
 export default {
   validProductBody,
   noNameProductBody,
   noPriceProductBody,
   noOrderIdProductBody,
   productBodyWithID,
+  mockProducts,
 }
