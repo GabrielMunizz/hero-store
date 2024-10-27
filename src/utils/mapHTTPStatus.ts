@@ -6,6 +6,7 @@ const mapHTTPStatus = (status: string): number => {
     UNPROCESSABLE_ENTITY: 422,
     SUCCESSFUL: 200,
     CREATED: 201,
+    NO_CONTENT: 204,
   };
 
   return statusHTTP[status] ?? 500;

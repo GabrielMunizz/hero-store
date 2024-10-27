@@ -17,7 +17,25 @@ const addProducts = async (req: Request, res: Response) => {
   return res.status(mapHTTPStatus(status)).json(data);
 };
 
+const findProductById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const { status, data } = await productsServices.findProductById(Number(id));
+
+  res.status(mapHTTPStatus(status)).json(data);
+};
+
+const deleteProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  
+  const { status } = await productsServices.deleteProduct(Number(id));
+
+  res.status(mapHTTPStatus(status)).send();
+};
+
 export default {
   addProducts,
   getAllProducts,
+  findProductById,
+  deleteProduct,
 };
