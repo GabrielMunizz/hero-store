@@ -4,29 +4,21 @@ import ProductModel, {
 } from '../database/models/product.model';
 import { ServiceResponse } from '../types/ServiceResponse';
 
-const createProduct = async (
+const getAllProducts = async (): Promise<ServiceResponse<ProductSequelizeModel[]>> => {
+  const allProducts = await ProductModel.findAll();
+
+  return { status: 'SUCCESSFUL', data: allProducts };
+};
+
+const addProducts = async (
   product: ProductInputtableTypes,
 ): Promise<ServiceResponse<ProductSequelizeModel>> => {
   const newProduct = await ProductModel.create(product);
-  const responseService: ServiceResponse<ProductSequelizeModel> = {
-    status: 'SUCCESSFUL',
-    data: newProduct,
-  };
 
-  return responseService;
-};
-
-const getProducts = async (): Promise<ServiceResponse<ProductSequelizeModel[]>> => {
-  const products = await ProductModel.findAll();
-  
-  const responseService: ServiceResponse<ProductSequelizeModel[]> = {
-    status: 'SUCCESSFUL',
-    data: products,
-  };
-  return responseService;
+  return { status: 'CREATED', data: newProduct };
 };
 
 export default {
-  createProduct,
-  getProducts,
+  addProducts,
+  getAllProducts,
 };

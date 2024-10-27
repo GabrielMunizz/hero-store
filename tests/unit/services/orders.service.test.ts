@@ -1,43 +1,27 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import OrderModel from '../../../src/database/models/order.model';
-import ordersServices from '../../../src/services/orders.services';
+import orderServices from '../../../src/services/order.services';
+import orderMock from '../../mocks/order.mock';
 
 describe('OrdersService', function () {
   beforeEach(function () { sinon.restore(); });
+  
+  it('Ao passar um pedido sem formatação, a função formatOrders deve formatar o pedido corretamente', () => {
+    const parameter = orderMock.rawOrdersMock;
 
-  it('Testa se getServices retorna o resultado esperado', async() => {
+    const formattedOrder = orderServices.formatOrders(parameter);
+    
 
-    const findAllStub = sinon.stub(OrderModel, 'findAll');
+    expect(formattedOrder).to.deep.equal([
+      { id: 2, userId: 3, productIds: [1, 2] },
+      { id: 3, userId: 2, productIds: [3, 1] },
+    ]);
+  });
 
-    const mockOrders = [
-      {
-        id: 1,
-        userId: 1,
-        productIds: [
-           2 ,
-           1,
-        ],
-      },
-      {
-        id: 2,
-        userId: 3,
-        productIds: [
-          4,
-          3,
-        ],
-      },
-    ]
+  it('Ao usar o orderService, deve retornar uma lista de pedidos formatada', async () => {
+    const serviceResponse = await orderServices.getAllOrders();
 
-    const mockBuild = OrderModel.bulkBuild(mockOrders);
-
-    findAllStub.resolves(mockBuild);
-
-    const result = await ordersServices.getOrders();
-
-    sinon.assert.calledOnce(findAllStub);
-
-    expect(result.status).to.equal('SUCCESSFUL'); 
+    expect(serviceResponse.status).to.be.equal('SUCCESSFUL')
+    expect(serviceResponse.data).to.be.deep.equal(orderMock.validOrders);
   })
-
 });
