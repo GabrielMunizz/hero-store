@@ -1,10 +1,12 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import ProductModel, {
   ProductInputtableTypes,
   ProductSequelizeModel,
 } from '../database/models/product.model';
-import { ServiceResponse } from '../types/ServiceResponse';
+import { Product } from '../types/Product';
+import { ServiceResponse, ServiceResponseSuccessful } from '../types/ServiceResponse';
 
-const getAllProducts = async (): Promise<ServiceResponse<ProductSequelizeModel[]>> => {
+const getAllProducts = async (): Promise<ServiceResponseSuccessful<ProductSequelizeModel[]>> => {
   const allProducts = await ProductModel.findAll();
 
   return { status: 'SUCCESSFUL', data: allProducts };
@@ -27,17 +29,27 @@ const findProductById = async (id: number): Promise<ServiceResponse<ProductSeque
   return { status: 'SUCCESSFUL', data: product };
 };
 
-const deleteProduct = async (id: number): Promise<ServiceResponse<{ message: string }>> => {
-  const product = await findProductById(id);
+const updateProduct = async (
+  updatedData: Product,
+): Promise<ServiceResponse<{ message: string }>> => {
+  const { id, ...rest } = updatedData;
 
-  if (!product) {
+  const [affectedRows] = await ProductModel.update(rest, {
+    where: { id },    
+  });
+
+  if (affectedRows === 0) {
     return { status: 'NOT_FOUND', data: { message: 'product not found' } };
-  }
+  } 
 
+  return { status: 'SUCCESSFUL', data: { message: 'product updated!' } };
+};
+
+const deleteProduct = async (id: number): Promise<ServiceResponse<{ message: string }>> => {
   const removedProduct = await ProductModel.destroy({ where: { id } });
 
   if (removedProduct === 0) {
-    return { status: 'INTERNAL_SERVER_ERROR', data: { message: 'Ops! Something went wrong!' } };
+    return { status: 'NOT_FOUND', data: { message: 'product not found' } };
   }
 
   return { status: 'NO_CONTENT', data: { message: 'Product removed!' } };
@@ -47,5 +59,6 @@ export default {
   addProducts,
   getAllProducts,
   findProductById,
+  updateProduct,
   deleteProduct,
 };
