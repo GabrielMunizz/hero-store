@@ -99,6 +99,4 @@ describe('Testes do productController', function () {
     expect(res.status).to.have.been.calledWith(204);
     expect(res.send).to.have.been.calledOnce;    
   });
-  
-
 });
