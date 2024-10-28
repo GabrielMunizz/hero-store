@@ -6,7 +6,4 @@ export type User = {
   password: string;
 };
 
-export type Login = {
-  username: string,
-  password: string,
-};
+export type UserLogin = Omit<User, 'vocation' | 'level'>;

@@ -1,14 +1,14 @@
 import express from 'express';
-import ProductRoute from './routes/products';
-import OrderRoute from './routes/orders';
-import LoginRoute from './routes/login';
+
+import productRoute from './routes/product.route';
+import orderRouter from './routes/order.route';
+import userRouter from './routes/user.route';
 
 const app = express();
 
 app.use(express.json());
-
-app.use('/products', ProductRoute);
-app.use('/orders', OrderRoute);
-app.use('/login', LoginRoute);
+app.use(productRoute);
+app.use(orderRouter);
+app.use(userRouter);
 
 export default app;

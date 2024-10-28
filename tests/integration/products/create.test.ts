@@ -1,79 +1,87 @@
-import sinon from 'sinon';
 import chai, { expect } from 'chai';
-import chaiHttp from 'chai-http';
-import service from '../../../src/services/products.services'
+import sinon from 'sinon';
 import productMock from '../../mocks/product.mock';
-import app from '../../../src/app'
-import ProductModel from '../../../src/database/models/product.model';import { create } from 'domain';
-;
 
+import chaiHttp from 'chai-http';
+import ProductModel from '../../../src/database/models/product.model';
 
+import app from '../../../src/app';
 
 chai.use(chaiHttp);
 
 describe('POST /products', function () { 
   beforeEach(function () { sinon.restore(); });
 
-  // se o produto for criado corretamente, retorna uma resposta de sucesso.
-  it('Testa se é possível criar um produto corretamente', async() => {
+  it('Ao receber um produto sem nome, deve retornar um erro', async () => {
 
-    const product = {
-      id: 6,
-      name: 'Produto de Teste',
-      price: '10 moedas',
-      orderId: 1,
-    };
+    const httpRequestBody = productMock.noProductName;
 
-    const mockBuild = ProductModel.build(product);
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
 
-    sinon.stub(ProductModel, 'create').resolves(mockBuild);    
-
-    sinon.stub(service, 'createProduct').resolves({status: 'SUCCESSFUL', data: mockBuild})
-
-    const httpResponse = await chai.request(app).post('/products').send(productMock.validProductBody);
-    
-
-    expect(httpResponse.status).to.equal(201);
-    expect(httpResponse.body).to.be.deep.equal(mockBuild.dataValues);
+    expect(httpResponse.status).to.equal(400);
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"name\" is required"})
   })
 
-  // se o produto não tiver name, retorna um erro.
-  it('Testa se enviar um produto sem "name" retorna o erro esperado', async() => {
-    const httpRequestBody = productMock.noNameProductBody;
+  it('Ao receber um produto com nome diferente de string, deve retornar um erro', async () => {
+
+    const httpRequestBody = productMock.invalidProductName;
+
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+
+    expect(httpResponse.status).to.equal(422);
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"name\" must be a string"})
+  })
+
+  it('Ao receber um produto com nome menor que 3 caracteres, deve retornar um erro', async () => {
+
+    const httpRequestBody = productMock.invalidNameLength;
+
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+
+    expect(httpResponse.status).to.equal(422);
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"name\" length must be at least 3 characters long"})
+  })
+
+  it('Ao receber um produto sem preço, deve retornar um erro', async () => {
+
+    const httpRequestBody = productMock.noProductPrice;
 
     const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
 
     expect(httpResponse.status).to.equal(400);
-    expect(httpResponse.body).to.be.deep.equal({message: '"name" is required'});
-  });
-  
-  // se o produto não tiver price, retorna um erro.
-  it('Testa se enviar um produto sem "price" retorna o erro esperado', async() => {
-    const httpRequestBody = productMock.noPriceProductBody;
-    
-    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
-    
-    expect(httpResponse.status).to.equal(400);
-    expect(httpResponse.body).to.be.deep.equal({message: '"price" is required'});
-  });
-  
-  // se o produto não tiver orderId, retorna um erro.
-  it('Testa se enviar um produto sem "orderId" retorna o erro esperado', async() => {
-    const httpRequestBody = productMock.noOrderIdProductBody;
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"price\" is required"})
+  })
 
-    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
-    
+  it('Ao receber um produto com preço diferente de string, deve retornar um erro', async () => {
 
-    expect(httpResponse.status).to.equal(400);
-    expect(httpResponse.body).to.be.deep.equal({message: '"orderId" is required'});
-  });
-
-  it('Testa se enviar um produto com "id" incluso, retorna o erro esperado', async() => {
-    const httpRequestBody = productMock.productBodyWithID;
+    const httpRequestBody = productMock.invalidProductPrice;
 
     const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
 
-    expect(httpResponse.status).to.equal(500);
-    expect(httpResponse.body).to.be.deep.equal({error: "Erro interno do servidor"});
-  });
+    expect(httpResponse.status).to.equal(422);
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"price\" must be a string"})
+  })
+
+  it('Ao receber um produto com preço menor que 3 caracteres, deve retornar um erro', async () => {
+
+    const httpRequestBody = productMock.invalidPriceLength;
+
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+
+    expect(httpResponse.status).to.equal(422);
+    expect(httpResponse.body).to.be.deep.equal({"message": "\"price\" length must be at least 3 characters long"})
+  })
+
+  it('Ao receber um produto válido, deve retornar o objeto do produto com o id correto', async () => {
+    const httpRequestBody = productMock.validProduct;
+
+    const mockProductCreation = ProductModel.build({id: 4, ...productMock.validProduct});
+    sinon.stub(ProductModel, 'create').resolves(mockProductCreation);
+    
+    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+
+    expect(httpResponse.status).to.equal(201);
+    expect(httpResponse.body).to.be.deep.equal({id: 4, ...productMock.validProduct})
+  })
+
 });

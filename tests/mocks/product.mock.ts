@@ -1,51 +1,75 @@
-const noNameProductBody = {
-  price: '10 moedas',
-  orderId: 1,
+const validProductName = 'Sedenta por Sangue';
+const validPrice = '18 peças de ouro';
+const validOrderId = 4;
+
+const validProduct = {
+  name: validProductName,
+  price: validPrice,
+  orderId: validOrderId,
 }
 
-const noPriceProductBody = {
-  name: 'Produto de Teste',  
-  orderId: 1,
+const noProductName = {  
+  price: validPrice,
+  orderId: validOrderId,
 }
 
-const noOrderIdProductBody = {
-  name: 'Produto de Teste',
-  price: '10 moedas',
+const invalidProductName = {  
+  name: 0,
+  price: validPrice,
+  orderId: validOrderId,
 }
 
-const productBodyWithID = {
-  id: 2,
-  name: 'Martelo de Thor',
-  price: '30 peças de ouro',
-  orderId: 4,
-};
-
-const validProductBody = {   
-  name: 'Produto de Teste',
-  price: '10 moedas',
-  orderId: 1,
+const invalidNameLength = {
+  name: 'ps',
+  price: validPrice,
+  orderId: validOrderId,
 }
 
-const mockProducts = [
+const noProductPrice = {
+  name: validProductName,  
+  orderId: validOrderId,
+}
+
+const invalidProductPrice = {
+  name: validProductName,
+  price: 0,
+  orderId: validOrderId,
+}
+
+const invalidPriceLength = {
+  name: validProductName,
+  price: 'ps',
+  orderId: validOrderId,
+}
+
+const noOrderId = {
+  name: validProductName,
+  price: validPrice,  
+}
+
+const validProductList = [
   {
-    id: 6,
-    name: 'Produto de Teste',
-    price: '10 moedas',
+    id: 1,
+    name: 'Excalibur',
+    price: '10 peças de ouro',
     orderId: 1,
   },
   {
-    id: 7,
-    name: 'Produto de Teste 2',
-    price: '20 moedas',
-    orderId: 2,
+    id: 2,
+    name: 'Espada Justiceira',
+    price: '20 peças de ouro',
+    orderId: 1,
   },
 ];
 
 export default {
-  validProductBody,
-  noNameProductBody,
-  noPriceProductBody,
-  noOrderIdProductBody,
-  productBodyWithID,
-  mockProducts,
+  validProduct,
+  validProductList,
+  noProductName,
+  noProductPrice,
+  invalidPriceLength,
+  invalidProductPrice,
+  noOrderId,
+  invalidNameLength,
+  invalidProductName,
 }
