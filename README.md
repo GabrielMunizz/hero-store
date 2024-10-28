@@ -22,32 +22,32 @@ Este é o backend da Hero Store, uma API construída com Node.js e TypeScript, u
 git clone git@github.com:GabrielMunizz/hero-store.git
 ```
 
-1. **Instale as dependências**:
+2. **Instale as dependências**:
 
 ```jsx
 npm install
 ```
 
-1. **Monte os containers**:
+3. **Monte os containers**:
 
 ```jsx
 docker compose up -d --build
 ```
 
-1. **Verifique o status do banco de dados**:
+4. **Verifique o status do banco de dados**:
 Liste os containers e certifique-se de que o status do banco `hero_store_db` esteja como "healthy". Use o comando:
 
 ```jsx
 docker container ps
 ```
 
-1. **Execute as migrations e seed do banco de dados**:
+5. **Execute as migrations e seed do banco de dados**:
 
 ```jsx
 npm run db:reset
 ```
 
-1. **Desmonte os containers** (quando necessário):
+6. **Desmonte os containers** (quando necessário):
 
 ```jsx
 docker compose down
