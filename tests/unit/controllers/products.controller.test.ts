@@ -68,8 +68,7 @@ describe('Testes do productController', function () {
     expect(res.json).to.have.been.calledWith(mockServiceResponse.data);
   });
   
-  it('Ao usar a função updateProduct, deve retornar status 200 e o produto encontrado', async() => {
-    const mockBuild = ProductModel.build({id: 1, ...productMock.validProduct});
+  it('Ao usar a função updateProduct, deve retornar status 200 e o produto encontrado', async() => {    
     const mockServiceResponse: ServiceResponse<{message: string}> = {
       status: 'SUCCESSFUL',
       data: {message: 'product updated!'},
